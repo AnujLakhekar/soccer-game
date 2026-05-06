@@ -11,5 +11,5 @@ func _enter_tree() -> void:
 
 func _process(delta: float) -> void:
 	if Time.get_ticks_msec() - tackle_start_time > TACKLE_DURATION:
-		state_transiction_request.emit(Player.State.MOVING)
+		state_transiction_request.emit(Player.State.RECOVERING)
 		

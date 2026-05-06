@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://5k5hs5bsf6c4"]
+[gd_scene load_steps=10 format=3 uid="uid://5k5hs5bsf6c4"]
 
 [ext_resource type="Script" uid="uid://yo6acj3i11be" path="res://scence/charecters/player.gd" id="1_305db"]
 [ext_resource type="Texture2D" uid="uid://b0swklkcap0je" path="res://art/characters/soccer-player.png" id="1_rhy0p"]
@@ -72,10 +72,28 @@ tracks/0/keys = {
 "values": [30]
 }
 
+[sub_resource type="Animation" id="Animation_2a81d"]
+resource_name = "recover"
+length = 0.1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("playerSprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [18]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_faxye"]
 _data = {
 &"RESET": SubResource("Animation_qo6c4"),
 &"idle": SubResource("Animation_hkb5o"),
+&"recover": SubResource("Animation_2a81d"),
 &"run": SubResource("Animation_faxye"),
 &"tackel": SubResource("Animation_305db")
 }

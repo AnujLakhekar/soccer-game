@@ -2,7 +2,7 @@ class_name Player
 extends CharacterBody2D
 
 enum ControlScheme {CPU,P1,P2}
-enum State {MOVING, TACKLE}
+enum State {MOVING, TACKLE, RECOVERING}
 
 
 @export var control_scheme : ControlScheme
