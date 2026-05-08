@@ -4,11 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://c2iu8c307g1qg" path="res://art/props/soccer-ball.png" id="1_g1py4"]
 [ext_resource type="Texture2D" uid="uid://c4aab7p5vbv7w" path="res://art/props/ball-shadow.png" id="2_wjtme"]
 
-[sub_resource type="Animation" id="Animation_2gcpq"]
-resource_name = "idle"
-length = 0.1
-loop_mode = 1
-step = 0.0333
+[sub_resource type="Animation" id="Animation_ftfc6"]
+length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -22,8 +19,11 @@ tracks/0/keys = {
 "values": [0]
 }
 
-[sub_resource type="Animation" id="Animation_ftfc6"]
-length = 0.001
+[sub_resource type="Animation" id="Animation_2gcpq"]
+resource_name = "idle"
+length = 0.1
+loop_mode = 1
+step = 0.0333
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -79,6 +79,7 @@ offset = Vector2(-5, -10)
 hframes = 4
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
 libraries = {
 &"": SubResource("AnimationLibrary_qne0f")
 }
