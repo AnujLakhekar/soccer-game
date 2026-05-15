@@ -2,13 +2,15 @@ class_name Player
 extends CharacterBody2D
 
 enum ControlScheme {CPU,P1,P2}
-enum State {MOVING, TACKLE, RECOVERING}
+enum State {MOVING, TACKLE, RECOVERING,PREPARING_SHOOT, SHOOTING}
 
 
 @export var control_scheme : ControlScheme
 @onready var animation: AnimationPlayer = $AnimationPlayer
 @onready var sprite: Sprite2D = %playerSprite
+@export var power : float
 @export var speed: float 
+@export var ball : Ball
 
 var current_state : PlayerState = null
 var factory = PlayerStateFactory.new()
@@ -36,7 +38,10 @@ func handle_movement_animation() -> void:
 		animation.play("run")
 	else:
 		animation.play("idle")
-		
+
+func has_ball() -> bool:
+	return ball.carrier == self
+
 func set_Heading() -> void:
 	if velocity.x > 0:
 		heading = Vector2.RIGHT

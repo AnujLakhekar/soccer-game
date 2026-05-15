@@ -1,4 +1,5 @@
 extends Node
+
 enum Action {LEFT, RIGHT, UP, DOWN, SHOOT, PASS}
 
 const ActionMap : Dictionary = {
