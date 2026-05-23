@@ -24,11 +24,11 @@ func _process(delta: float) -> void:
 	flip_sprite()
 	move_and_slide()
 	
-func switch_state(state: State) -> void:
+func switch_state(state: State, state_data : PlayerStateData = PlayerStateData.new()) -> void:
 	if current_state != null:
 		current_state.queue_free()
 	current_state = factory.get_fresh_state(state)
-	current_state.setup(self, animation)
+	current_state.setup(self, state_data, animation, ball)
 	current_state.state_transiction_request.connect(switch_state.bind())
 	current_state.name = "playerStateMachine" + str(state)
 	call_deferred("add_child", current_state)
@@ -53,3 +53,7 @@ func flip_sprite() -> void:
 		sprite.flip_h = false
 	elif heading == Vector2.LEFT:
 		sprite.flip_h = true
+
+func on_animation_complete() -> void:
+	if current_state != null:
+		current_state.on_animation_complete()

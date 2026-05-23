@@ -12,4 +12,4 @@ func _enter_tree() -> void:
 	
 func _process(delta: float) -> void:
 	if Time.get_ticks_msec() - time_start_req > duration_requrng:
-		state_transiction_request.emit(Player.State.MOVING)
+		transiction_state(Player.State.MOVING)

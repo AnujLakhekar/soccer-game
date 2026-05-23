@@ -35,6 +35,7 @@ ball = NodePath("../Ball")
 
 [node name="player2" parent="ActionContainer" node_paths=PackedStringArray("ball") instance=ExtResource("4_j6sff")]
 position = Vector2(203, 188)
+control_scheme = null
 ball = NodePath("../Ball")
 
 [node name="player3" parent="ActionContainer" node_paths=PackedStringArray("ball") instance=ExtResource("4_j6sff")]

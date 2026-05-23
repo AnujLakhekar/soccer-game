@@ -19,4 +19,4 @@ func _process(delta: float) -> void:
 			
 		
 	if Time.get_ticks_msec() - tackle_start_time > TACKLE_END_DURATION:
-		state_transiction_request.emit(Player.State.RECOVERING)
+		transiction_state(Player.State.RECOVERING)
