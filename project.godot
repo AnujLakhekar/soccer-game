@@ -10,14 +10,14 @@ config_version=5
 
 [application]
 
-config/name="Football"
-run/main_scene="uid://gc6mm56ke0q0"
-config/features=PackedStringArray("4.4", "Forward Plus")
+config/name="Soccer Course"
+run/main_scene="uid://bid4q8hesw3wj"
+config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
-KeyUtils="*res://utils/keyUtils.gd"
+KeyUtils="*res://utils/key_utils.gd"
 
 [debug]
 
@@ -97,13 +97,12 @@ p2_shoot={
 
 [layer_names]
 
-2d_physics/layer_1="pitch_wall"
-2d_physics/layer_2="player"
-2d_physics/layer_3="ball"
+2d_physics/layer_1="PitchWalls"
+2d_physics/layer_2="Player"
+2d_physics/layer_3="Ball"
 
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
-environment/defaults/default_clear_color=Color(0.306923, 0.306923, 0.306923, 1)

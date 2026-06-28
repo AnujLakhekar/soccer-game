@@ -1,2 +1,2 @@
-# soccer-game
-2d godot based game 
+# soccer-course
+Course for building a 2D soccer game in Godot
