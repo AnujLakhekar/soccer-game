@@ -22,6 +22,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 KeyUtils="*res://utils/key_utils.gd"
+DataLoader="*uid://ba15ee7wspt02"
 
 [debug]
 

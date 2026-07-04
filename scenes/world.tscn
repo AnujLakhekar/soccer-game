@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://cv4n0o2f54jf6" path="res://assets/art/backgrounds/pitch-lines.png" id="3_71j4m"]
 [ext_resource type="PackedScene" uid="uid://fi75pm23saar" path="res://scenes/characters/player.tscn" id="4_k0juu"]
 [ext_resource type="PackedScene" uid="uid://b4fcsbd0h08uo" path="res://scenes/ball/ball.tscn" id="5_71j4m"]
+[ext_resource type="Script" uid="uid://bi8cftls6uycp" path="res://scenes/actors_container.gd" id="5_e3hyu"]
 [ext_resource type="PackedScene" uid="uid://dm3olt4s4cok1" path="res://scenes/goal/goal.tscn" id="5_i7141"]
 [ext_resource type="Texture2D" uid="uid://dbb2dcntpi4w5" path="res://assets/art/backgrounds/top-wall.png" id="6_4mrxx"]
 [ext_resource type="Texture2D" uid="uid://dbt1h0omdgqrs" path="res://assets/art/backgrounds/bottom-wall.png" id="7_7r4gi"]
@@ -42,8 +43,36 @@ modulate = Color(0.941176, 0.941176, 0.941176, 1)
 texture = ExtResource("3_71j4m")
 centered = false
 
-[node name="ActorsContainer" type="Node2D" parent="." unique_id=589132821]
+[node name="ActorsContainer" type="Node2D" parent="." unique_id=589132821 node_paths=PackedStringArray("ball", "goal_home", "goal_away")]
 y_sort_enabled = true
+script = ExtResource("5_e3hyu")
+ball = NodePath("Ball")
+goal_home = NodePath("PitchObjects/GoalHome")
+goal_away = NodePath("PitchObjects/GoalAway")
+team_home = "FRANCE"
+team_away = "GERMANY"
+
+[node name="spawns" type="Node2D" parent="ActorsContainer" unique_id=508405059]
+unique_name_in_owner = true
+position = Vector2(425, 178)
+
+[node name="Goile" type="Node2D" parent="ActorsContainer/spawns" unique_id=1934244674]
+position = Vector2(-345, 0)
+
+[node name="DefencePosition" type="Node2D" parent="ActorsContainer/spawns" unique_id=414802385]
+position = Vector2(-235, -30)
+
+[node name="DefencePosition2" type="Node2D" parent="ActorsContainer/spawns" unique_id=932168243]
+position = Vector2(-235, 30)
+
+[node name="MidFieldPos" type="Node2D" parent="ActorsContainer/spawns" unique_id=652319986]
+position = Vector2(-125, 0)
+
+[node name="OffencePos" type="Node2D" parent="ActorsContainer/spawns" unique_id=339023361]
+position = Vector2(-25, -80)
+
+[node name="OffencePos2" type="Node2D" parent="ActorsContainer/spawns" unique_id=867601159]
+position = Vector2(-25, 80)
 
 [node name="PitchObjects" type="Node2D" parent="ActorsContainer" unique_id=1570256475]
 y_sort_enabled = true
