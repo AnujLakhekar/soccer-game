@@ -7,7 +7,7 @@ const CONTROL_SCHEME_MAP : Dictionary = {
 	ControlScheme.P2: preload("res://assets/art/props/2p.png"),
 }
 const GRAVITY := 8.0
-
+const COUNTRIES := ["DEFAULT", "FRANCE", "ARGENTINA", "BRAZIL", "ENGLAND", "GERMANY", "ITALY", "SPAIN", "USA"]
 enum ControlScheme {CPU, P1, P2}
 enum Role {GOALTE, DEFENSE, OFFENSE, MIDFIELD}
 enum SkinColor {LIGHT, MID, DARK}
@@ -26,6 +26,7 @@ enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, HEAD
 @onready var player_sprite : Sprite2D = %PlayerSprite
 @onready var teammate_detection_area : Area2D = %TeammateDetectionArea
 
+var country = ""
 var current_state: PlayerState = null
 var heading := Vector2.RIGHT
 var height := 0.0
@@ -36,8 +37,15 @@ var skincolor = Player.SkinColor.MID
 var fullname : String 
 
 func _ready() -> void:
+	set_shaders()
 	set_control_texture()
 	switch_state(State.MOVING)
+
+func set_shaders() -> void:
+	player_sprite.material.set_shader_parameter("skin_color", skincolor)
+	var country_code = COUNTRIES.find(country)
+	country_code = clampi(country_code, 0, COUNTRIES.size() - 1 )
+	player_sprite.material.set_shader_parameter("team_color", country_code)
 
 func _process(delta: float) -> void:
 	flip_sprites()
@@ -45,7 +53,7 @@ func _process(delta: float) -> void:
 	process_gravity(delta)
 	move_and_slide()
 
-func initialize(player_pos : Vector2, c_ball : Ball, c_own_goal : Goal , c_taget_goal : Goal, player_data : PlayerResource) -> void:
+func initialize(player_pos : Vector2, c_ball : Ball, c_own_goal : Goal , c_taget_goal : Goal, player_data : PlayerResource, c_country : String) -> void:
 	position = player_pos
 	ball = c_ball
 	own_goal = c_own_goal
@@ -56,6 +64,7 @@ func initialize(player_pos : Vector2, c_ball : Ball, c_own_goal : Goal , c_taget
 	skincolor = player_data.skin_color
 	fullname = player_data.full_name
 	heading = Vector2.LEFT if c_taget_goal.position.x < position.x else Vector2.RIGHT
+	country = c_country
 
 func switch_state(state: State, state_data: PlayerStateData = PlayerStateData.new()) -> void:
 	if current_state != null:
