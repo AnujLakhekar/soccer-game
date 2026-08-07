@@ -36,10 +36,17 @@ var role  = Player.Role.MIDFIELD
 var skincolor = Player.SkinColor.MID
 var fullname : String 
 
+# ai behaviors 
+var aibehavior : AIbehavior = AIbehavior.new()
+var spawn_point = Vector2.ZERO
+var weight_on_duty_sterrring = 0.0
+
 func _ready() -> void:
 	set_shaders()
 	set_control_texture()
 	switch_state(State.MOVING)
+	setup_ai_behavior()
+	spawn_point = position
 
 func set_shaders() -> void:
 	player_sprite.material.set_shader_parameter("skin_color", skincolor)
@@ -66,11 +73,16 @@ func initialize(player_pos : Vector2, c_ball : Ball, c_own_goal : Goal , c_taget
 	heading = Vector2.LEFT if c_taget_goal.position.x < position.x else Vector2.RIGHT
 	country = c_country
 
+func setup_ai_behavior() -> void:
+	aibehavior.setup(ball, self)
+	aibehavior.name = "Ai behavior"
+	add_child(aibehavior)
+
 func switch_state(state: State, state_data: PlayerStateData = PlayerStateData.new()) -> void:
 	if current_state != null:
 		current_state.queue_free()
 	current_state = state_factory.get_fresh_state(state)
-	current_state.setup(self, state_data, animation_player, ball, teammate_detection_area, ball_detection_area, target_goal, own_goal)
+	current_state.setup(self, state_data, animation_player, ball, teammate_detection_area, ball_detection_area, target_goal, own_goal, aibehavior)
 	current_state.state_transition_requested.connect(switch_state.bind())
 	current_state.name = "PlayerStateMachine: " + str(state)
 	call_deferred("add_child", current_state)
