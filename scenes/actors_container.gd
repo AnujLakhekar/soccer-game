@@ -58,4 +58,4 @@ func set_on_duty_weights() -> void:
 			return p1.spawn_point.distance_squared_to(ball.position) < p2.spawn_point.distance_squared_to(ball.position))
 		
 		for i in range(cpu_players.size()):
-			cpu_players[i].weight_on_duty_sterrring = 1 - ease(float(i/10), 0.1)
+			cpu_players[i].weight_on_duty_sterrring = 1 - ease(float(i)/10.0, 0.1)

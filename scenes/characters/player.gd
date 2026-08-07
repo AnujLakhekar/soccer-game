@@ -36,6 +36,8 @@ var role  = Player.Role.MIDFIELD
 var skincolor = Player.SkinColor.MID
 var fullname : String 
 
+var walk_thresohld = 0.6
+
 # ai behaviors 
 var aibehavior : AIbehavior = AIbehavior.new()
 var spawn_point = Vector2.ZERO
@@ -88,10 +90,13 @@ func switch_state(state: State, state_data: PlayerStateData = PlayerStateData.ne
 	call_deferred("add_child", current_state)
 
 func set_movement_animation() -> void:
-	if velocity.length() > 0:
-		animation_player.play("run")
-	else:
+	var v_l = velocity.length()
+	if v_l < 1:
 		animation_player.play("idle")
+	elif v_l < speed * walk_thresohld:
+		animation_player.play("walk")
+	else:
+		animation_player.play("run")
 
 func process_gravity(delta: float) -> void:
 	if height > 0:
