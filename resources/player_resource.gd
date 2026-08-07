@@ -1,4 +1,4 @@
-class_name  PlayerResource
+class_name PlayerResource
 extends Resource
 
 
