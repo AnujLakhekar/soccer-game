@@ -130,6 +130,11 @@ func set_control_texture() -> void:
 func on_animation_complete() -> void:
 	if current_state != null:
 		current_state.on_animation_complete()
+
 func control_ball() -> void:
 	if ball.height > 10.0:
 		switch_state(State.CHEST_CONTROL)
+
+func is_facing_target_goal() -> bool:
+	var direction_to_target = position.direction_to(target_goal.position)
+	return heading.dot(direction_to_target) > 0
