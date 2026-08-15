@@ -96,6 +96,23 @@ tracks/0/keys = {
 "values": [24, 25]
 }
 
+[sub_resource type="Animation" id="Animation_xhtjm"]
+resource_name = "hurt"
+length = 0.2
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PlayerSprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [54, 55]
+}
+
 [sub_resource type="Animation" id="Animation_yewv4"]
 resource_name = "idle"
 length = 0.6
@@ -272,6 +289,7 @@ _data = {
 &"bicycle_kick": SubResource("Animation_eojnx"),
 &"chest_controll": SubResource("Animation_2l4js"),
 &"header": SubResource("Animation_7vyk4"),
+&"hurt": SubResource("Animation_xhtjm"),
 &"idle": SubResource("Animation_yewv4"),
 &"kick": SubResource("Animation_6eyoc"),
 &"prep_kick": SubResource("Animation_kqtwu"),
@@ -289,6 +307,9 @@ height = 18.0
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dyp2m"]
 radius = 6.0
 height = 20.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6eyoc"]
+size = Vector2(7, 7)
 
 [node name="Player" type="CharacterBody2D" unique_id=1781237485]
 collision_layer = 2
@@ -319,6 +340,7 @@ libraries/ = SubResource("AnimationLibrary_dyp2m")
 autoplay = &"idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=812212948]
+visible = false
 position = Vector2(0, -3)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_rp718")
@@ -350,3 +372,13 @@ monitorable = false
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BallDetectionArea" unique_id=27400579]
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_dyp2m")
+
+[node name="TakelDamangeEmmiter" type="Area2D" parent="." unique_id=314246358]
+collision_layer = 0
+collision_mask = 2
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TakelDamangeEmmiter" unique_id=1225839900]
+position = Vector2(14, -2)
+shape = SubResource("RectangleShape2D_6eyoc")

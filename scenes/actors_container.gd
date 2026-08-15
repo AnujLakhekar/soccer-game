@@ -20,7 +20,6 @@ func _ready() -> void:
 	squad_home = spawn_players(team_home, goal_home)
 	spawns.scale.x = -1
 	squad_away = spawn_players(team_away, goal_away)
-	
 	var player : Player = get_children().filter(func(p): return p is Player)[4]
 	player.control_scheme = Player.ControlScheme.P1
 	player.set_control_texture()

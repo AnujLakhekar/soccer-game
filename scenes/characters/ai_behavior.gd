@@ -6,6 +6,8 @@ const AI_TICK_TIME = 200
 const SPRED_AI_FACTOR = 0.8
 const SHOT_THRESHOLD = 150
 const SHOT_PROBABILITY = 0.3
+const TAKLE_PROBABILITY = 0.3
+const TAKLE_DISTANCE = 15
 
 var ball : Ball = null
 var player : Player = null
@@ -41,6 +43,9 @@ func perform_ai_movements() -> void:
 	player.velocity = total_steering_Force * player.speed
 
 func perform_ai_desition() -> void:
+	if is_ball_posseded_by_opponent() and player.position.distance_to(ball.position) < TAKLE_DISTANCE and randf() < TAKLE_PROBABILITY:
+		player.switch_state(Player.State.TACKLING)
+
 	if ball.carrier == player:
 		var target := player.target_goal.get_center_target_position()
 		if  player.position.distance_to(target) < SHOT_THRESHOLD and randf() < SHOT_PROBABILITY:
@@ -48,7 +53,6 @@ func perform_ai_desition() -> void:
 			var shot_direction = player.position.direction_to(player.target_goal.get_radom_vector_position())
 			var data = PlayerStateData.build().set_shot_power(player.power).set_shot_direction(shot_direction)
 			player.switch_state(Player.State.SHOOTING, data)
-		
 			
 
 func get_weight_streeing_force() -> Vector2:
@@ -81,6 +85,9 @@ func get_bicycle_weight(position: Vector2, center_target: Vector2, inner_circle_
 func face_towrds_target_goal() -> void:
 	if not player.is_facing_target_goal():
 		player.heading = player.heading * -1
+
+func is_ball_posseded_by_opponent() -> bool:
+	return ball.carrier != null and ball.carrier.country != player.country
 
 func is_ball_carried_by_teammate() -> bool:
 	return ball.carrier != null and ball.carrier != player and ball.carrier.country == player.country

@@ -11,7 +11,7 @@ const COUNTRIES := ["DEFAULT", "FRANCE", "ARGENTINA", "BRAZIL", "ENGLAND", "GERM
 enum ControlScheme {CPU, P1, P2}
 enum Role {GOALTE, DEFENSE, OFFENSE, MIDFIELD}
 enum SkinColor {LIGHT, MID, DARK}
-enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, HEADER, VOLLEY_KICK, BICYCLE_KICK, CHEST_CONTROL}
+enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, HEADER, VOLLEY_KICK, BICYCLE_KICK, CHEST_CONTROL, HURT}
 
 @export var ball : Ball
 @export var control_scheme : ControlScheme
@@ -25,6 +25,7 @@ enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, HEAD
 @onready var control_sprite : Sprite2D = %ControlSprite
 @onready var player_sprite : Sprite2D = %PlayerSprite
 @onready var teammate_detection_area : Area2D = %TeammateDetectionArea
+@onready var takel_damange_emmiter: Area2D = $TakelDamangeEmmiter
 
 var country = ""
 var current_state: PlayerState = null
@@ -48,6 +49,8 @@ func _ready() -> void:
 	set_control_texture()
 	switch_state(State.MOVING)
 	setup_ai_behavior()
+	# player takle behavior 
+	takel_damange_emmiter.body_entered.connect(takle_on_body_enter)
 	spawn_point = position
 
 func set_shaders() -> void:
@@ -80,11 +83,11 @@ func setup_ai_behavior() -> void:
 	aibehavior.name = "Ai behavior"
 	add_child(aibehavior)
 
-func switch_state(state: State, state_data: PlayerStateData = PlayerStateData.new()) -> void:
+func switch_state(state: State, state_data: PlayerStateData = PlayerStateData.new(), ) -> void:
 	if current_state != null:
 		current_state.queue_free()
 	current_state = state_factory.get_fresh_state(state)
-	current_state.setup(self, state_data, animation_player, ball, teammate_detection_area, ball_detection_area, target_goal, own_goal, aibehavior)
+	current_state.setup(self, state_data, animation_player, ball, teammate_detection_area, ball_detection_area, target_goal, own_goal, takel_damange_emmiter, aibehavior)
 	current_state.state_transition_requested.connect(switch_state.bind())
 	current_state.name = "PlayerStateMachine: " + str(state)
 	call_deferred("add_child", current_state)
@@ -115,14 +118,24 @@ func set_heading() -> void:
 func flip_sprites() -> void:
 	if heading == Vector2.RIGHT:
 		player_sprite.flip_h = false
+		takel_damange_emmiter.scale.x = 1
 	elif heading == Vector2.LEFT:
 		player_sprite.flip_h = true
+		takel_damange_emmiter.scale.x = -1
+	
+func takle_on_body_enter(player: Player) -> void:
+	if player != self and player.country != country and player == ball.carrier:
+		player.get_hurt(position.direction_to(player.position))
 
 func set_sprite_visibility() -> void:
 	control_sprite.visible = has_ball() or not control_scheme == ControlScheme.CPU
 
 func has_ball() -> bool:
 	return ball.carrier == self
+
+func get_hurt(origin: Vector2) -> void:
+	var data = PlayerStateData.build().set_hurt_direction(origin)
+	switch_state(Player.State.HURT, data)
 
 func set_control_texture() -> void:
 	control_sprite.texture = CONTROL_SCHEME_MAP[control_scheme]
