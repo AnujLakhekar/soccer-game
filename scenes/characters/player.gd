@@ -26,6 +26,7 @@ enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, HEAD
 @onready var player_sprite : Sprite2D = %PlayerSprite
 @onready var teammate_detection_area : Area2D = %TeammateDetectionArea
 @onready var takel_damange_emmiter: Area2D = $TakelDamangeEmmiter
+@onready var oppnent_detection_area: Area2D = $OppnentDetectionArea
 
 var country = ""
 var current_state: PlayerState = null
@@ -79,7 +80,7 @@ func initialize(player_pos : Vector2, c_ball : Ball, c_own_goal : Goal , c_taget
 	country = c_country
 
 func setup_ai_behavior() -> void:
-	aibehavior.setup(ball, self)
+	aibehavior.setup(ball, self, oppnent_detection_area)
 	aibehavior.name = "Ai behavior"
 	add_child(aibehavior)
 
@@ -119,9 +120,11 @@ func flip_sprites() -> void:
 	if heading == Vector2.RIGHT:
 		player_sprite.flip_h = false
 		takel_damange_emmiter.scale.x = 1
+		oppnent_detection_area.scale.x = 1
 	elif heading == Vector2.LEFT:
 		player_sprite.flip_h = true
 		takel_damange_emmiter.scale.x = -1
+		oppnent_detection_area.scale.x = -1
 	
 func takle_on_body_enter(player: Player) -> void:
 	if player != self and player.country != country and player == ball.carrier:

@@ -8,19 +8,20 @@ const SHOT_THRESHOLD = 150
 const SHOT_PROBABILITY = 0.3
 const TAKLE_PROBABILITY = 0.3
 const TAKLE_DISTANCE = 15
+const PASS_PROBABILITY = 0.05
 
 var ball : Ball = null
 var player : Player = null
 var ai_scenece_time = Time.get_ticks_msec()
-
+var oppnent_detection_area : Area2D = null
 
 func _ready() -> void:
 	ai_scenece_time = Time.get_ticks_msec() + randi_range(0, AI_TICK_TIME)
 	
-func setup(context_ball : Ball, context_player :  Player) -> void:
+func setup(context_ball : Ball, context_player :  Player, oppnent_detection_area_context : Area2D) -> void:
 	player = context_player
 	ball = context_ball
-	
+	oppnent_detection_area = oppnent_detection_area_context
 
 func process_ai() -> void:
 	if Time.get_ticks_msec() - ai_scenece_time > AI_TICK_TIME:
@@ -43,6 +44,7 @@ func perform_ai_movements() -> void:
 	player.velocity = total_steering_Force * player.speed
 
 func perform_ai_desition() -> void:
+	
 	if is_ball_posseded_by_opponent() and player.position.distance_to(ball.position) < TAKLE_DISTANCE and randf() < TAKLE_PROBABILITY:
 		player.switch_state(Player.State.TACKLING)
 
@@ -53,7 +55,9 @@ func perform_ai_desition() -> void:
 			var shot_direction = player.position.direction_to(player.target_goal.get_radom_vector_position())
 			var data = PlayerStateData.build().set_shot_power(player.power).set_shot_direction(shot_direction)
 			player.switch_state(Player.State.SHOOTING, data)
-			
+		elif has_oppoent_nearby() and randf() < PASS_PROBABILITY:
+			player.switch_state(Player.State.PASSING)
+
 
 func get_weight_streeing_force() -> Vector2:
 	return player.weight_on_duty_sterrring * player.position.direction_to(ball.position)
@@ -91,3 +95,7 @@ func is_ball_posseded_by_opponent() -> bool:
 
 func is_ball_carried_by_teammate() -> bool:
 	return ball.carrier != null and ball.carrier != player and ball.carrier.country == player.country
+
+func has_oppoent_nearby() -> bool:
+	var players = oppnent_detection_area.get_overlapping_bodies()
+	return players.find_custom(func(p: Player): return p.country !=player.country) > -1
