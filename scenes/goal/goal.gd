@@ -3,6 +3,7 @@ extends Node2D
 
 @onready var back_net_area := %BackNetArea
 @onready var targets: Node2D = %targets
+@onready var scoreing_area: Area2D = %ScoreingArea
 
 func _ready() -> void:
 	back_net_area.body_entered.connect(on_ball_enter_back_net.bind())
@@ -16,3 +17,12 @@ func get_radom_vector_position() -> Vector2:
 
 func get_center_target_position() -> Vector2:
 	return targets.get_child(int(targets.get_child_count() / 2.0)).global_position
+
+func get_top_target_position() -> Vector2:
+	return targets.get_child(int(0)).global_position
+
+func get_bottom_target_position() -> Vector2:
+	return targets.get_child(int(targets.get_child_count() / 2.0)).global_position
+
+func get_scoring_area() -> Area2D:
+	return scoreing_area

@@ -14,8 +14,9 @@ func _init() -> void:
 		Player.State.SHOOTING: PlayerStateShooting,
 		Player.State.TACKLING: PlayerStateTackling,
 		Player.State.VOLLEY_KICK: PlayerStateVolleyKick,
-		Player.State.CHEST_CONTROL : PlayerStateChestControl
-	}
+		Player.State.CHEST_CONTROL : PlayerStateChestControl,
+		Player.State.DIVING : PlayerStateDiving
+		}
 
 func get_fresh_state(state: Player.State) -> PlayerState:
 	assert(states.has(state), "state doesn't exist!")

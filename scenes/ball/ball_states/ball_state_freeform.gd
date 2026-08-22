@@ -2,12 +2,13 @@ class_name BallStateFreeform
 extends BallState
 
 func _enter_tree() -> void:
-	player_detection_area.body_entered.connect(on_player_enter.bind())
+	player_detection_area.body_entered.connect(on_player_enter)
 
 func on_player_enter(body: Player) -> void:
-	ball.carrier = body
-	body.control_ball()
-	state_transition_requested.emit(Ball.State.CARRIED)
+	if body.can_carry_ball():
+		ball.carrier = body
+		body.control_ball()
+		state_transition_requested.emit(Ball.State.CARRIED)
 
 func _process(delta: float) -> void:
 	set_ball_animation_from_velocity()
