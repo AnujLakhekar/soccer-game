@@ -57,7 +57,6 @@ func get_carrier_sterring_force() -> Vector2:
 	var weight = get_bicycle_weight(player.position, target, 100, 0, 150, 1)
 	return weight * direction  
 
-
 func get_ball_proximity_steering_force() -> Vector2:
 	var weight = get_bicycle_weight(player.position, ball.position, 50, 1, 120, 0)
 	var direction  = player.position.direction_to(ball.position)

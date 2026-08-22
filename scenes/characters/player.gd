@@ -164,6 +164,10 @@ func control_ball() -> void:
 func can_carry_ball() -> bool:
 	return current_state != null and current_state.can_carry_ball()
 
+func get_pass_request(player : Player) -> void:
+	if ball.carrier != null and current_state != null and current_state.can_pass():
+		switch_state(Player.State.PASSING, PlayerStateData.build().set_pass_target(player))
+		pass
 func is_facing_target_goal() -> bool:
 	var direction_to_target = position.direction_to(target_goal.position)
 	return heading.dot(direction_to_target) > 0
