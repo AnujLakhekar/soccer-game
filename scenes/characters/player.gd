@@ -13,7 +13,7 @@ const COUNTRIES := ["DEFAULT", "FRANCE", "ARGENTINA", "BRAZIL", "ENGLAND", "GERM
 enum ControlScheme {CPU, P1, P2}
 enum Role {GOALTE, DEFENSE, OFFENSE, MIDFIELD}
 enum SkinColor {LIGHT, MID, DARK}
-enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, HEADER, VOLLEY_KICK, BICYCLE_KICK, CHEST_CONTROL, HURT, DIVING}
+enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, HEADER, VOLLEY_KICK, BICYCLE_KICK, CHEST_CONTROL, HURT, DIVING, CELEBRATING, MOURNING}
 
 @export var ball : Ball
 @export var control_scheme : ControlScheme
@@ -64,6 +64,7 @@ func _ready() -> void:
 	takel_damange_emmiter.body_entered.connect(takle_on_body_enter)
 	permenent_damage_emitter.body_entered.connect(takle_on_body_enter)
 	spawn_point = position
+	GameEvents.team_scored.connect(on_team_scored)
 
 func set_shaders() -> void:
 	player_sprite.material.set_shader_parameter("skin_color", skincolor)
@@ -170,6 +171,13 @@ func get_pass_request(player : Player) -> void:
 	if ball.carrier != null and current_state != null and current_state.can_pass():
 		switch_state(Player.State.PASSING, PlayerStateData.build().set_pass_target(player))
 		pass
+
+func on_team_scored(team) -> void:
+	if country == team:
+		switch_state(Player.State.MOURNING)
+	else : 
+		switch_state(Player.State.CELEBRATING)
+
 func is_facing_target_goal() -> bool:
 	var direction_to_target = position.direction_to(target_goal.position)
 	return heading.dot(direction_to_target) > 0

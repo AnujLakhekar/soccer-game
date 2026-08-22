@@ -15,6 +15,7 @@ const WEIGHT_CALCULATION_CASH = 200
 var squad_home : Array[Player] = []
 var squad_away : Array[Player] = []
 var time_scence = Time.get_ticks_msec()
+var country : String = ""
 
 func _ready() -> void:
 	squad_home = spawn_players(team_home, goal_home)
@@ -23,6 +24,8 @@ func _ready() -> void:
 	var player : Player = get_children().filter(func(p): return p is Player)[4]
 	player.control_scheme = Player.ControlScheme.P1
 	player.set_control_texture()
+	goal_home.initialize(team_home)
+	goal_away.initialize(team_away)
 
 func _process(_delta : float) -> void:
 		if Time.get_ticks_msec() - time_scence > WEIGHT_CALCULATION_CASH:
