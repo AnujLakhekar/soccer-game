@@ -1,6 +1,8 @@
 class_name Player
 extends CharacterBody2D
 
+signal swap_control(p : Player)
+
 const CONTROL_SCHEME_MAP : Dictionary = {
 	ControlScheme.CPU: preload("res://assets/art/props/cpu.png"),
 	ControlScheme.P1: preload("res://assets/art/props/1p.png"),

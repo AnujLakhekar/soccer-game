@@ -43,10 +43,26 @@ func spawn_players(country: String, own_goal: Goal) -> Array[Player]:
 	return player_nodes
 
 func spawn_player(player_position: Vector2, own_goal: Goal, target_goal: Goal, player_data: PlayerResource, country) -> Player:
-	var player := PLAYER_PREFAB.instantiate()
+	var player : Player = PLAYER_PREFAB.instantiate()
 	player.initialize(player_position, ball, own_goal, target_goal, player_data, country)
+	player.swap_control.connect(on_swap_player_request)
 	return player
 
+func on_swap_player_request(requester : Player) -> void:
+	var squade = squad_home if requester.country == squad_home[0].country else squad_away
+	var cpu_players = squade.filter(
+			func(p: Player): return p.control_scheme == Player.ControlScheme.CPU and p.role != Player.Role.GOALTE
+		)
+	cpu_players.sort_custom(func(p1: Player, p2: Player):
+			return p1.position.distance_squared_to(ball.position) < p2.position.distance_squared_to(ball.position))
+	var closest_player : Player = cpu_players[0]
+	if closest_player.position.distance_squared_to(ball.position) < requester.position.distance_squared_to(ball.position):
+		var player_control_scheme = requester.control_scheme
+		requester.control_scheme = Player.ControlScheme.CPU
+		requester.set_control_texture()
+		closest_player.control_scheme = player_control_scheme
+		closest_player.set_control_texture()
+		
 func set_on_duty_weights() -> void:
 	for squad in [squad_away, squad_home]:
 		var cpu_players = squad.filter(
