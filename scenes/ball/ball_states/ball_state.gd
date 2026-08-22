@@ -3,20 +3,26 @@ extends Node
 
 const GRAVITY := 10.0
 
-signal state_transition_requested(new_state: BallState)
+signal state_transition_requested(new_state: BallState, data : BallStateData)
+
 
 var animation_player : AnimationPlayer = null
 var ball : Ball = null
 var carrier : Player = null
 var player_detection_area : Area2D = null
 var sprite : Sprite2D = null
+var state_data : BallStateData = BallStateData.new()
 
-func setup(context_ball: Ball, context_player_detection_area: Area2D, context_carrier: Player, context_animation_player: AnimationPlayer, context_sprite: Sprite2D) -> void:
+func setup(context_ball: Ball, context_player_detection_area: Area2D, context_carrier: Player, context_animation_player: AnimationPlayer, context_sprite: Sprite2D, context_state_data : BallStateData) -> void:
 	ball = context_ball
 	player_detection_area = context_player_detection_area
 	carrier = context_carrier
 	animation_player = context_animation_player
 	sprite = context_sprite
+	state_data = context_state_data
+
+func transition_state(state : Ball.State, data : BallStateData = BallStateData.build()) -> void:
+	state_transition_requested.emit(state, data)
 
 func set_ball_animation_from_velocity() -> void:
 	if ball.velocity == Vector2.ZERO:
