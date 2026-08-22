@@ -90,7 +90,7 @@ func initialize(player_pos : Vector2, c_ball : Ball, c_own_goal : Goal , c_taget
 
 func setup_ai_behavior() -> void:
 	current_ai_behavior = aibehaviorfactory.get_ai_behavior(role)
-	current_ai_behavior.setup(ball, self, oppnent_detection_area)
+	current_ai_behavior.setup(ball, self, oppnent_detection_area, teammate_detection_area)
 	current_ai_behavior.name = "Ai behavior"
 	add_child(current_ai_behavior)
 

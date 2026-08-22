@@ -12,11 +12,16 @@ func perform_ai_movements() -> void:
 	var total_steering_Force := Vector2.ZERO
 	if player.has_ball():
 		total_steering_Force += get_carrier_sterring_force()
+	elif is_ball_carried_by_teammate():
+		total_steering_Force += get_assits_formation_steering()
 	else:
 		total_steering_Force += get_weight_streeing_force()
-		if is_ball_carried_by_teammate():
-			total_steering_Force += get_assits_formation_steering()
-			
+		if total_steering_Force.length_squared() < 1:
+			if is_ball_posseded_by_opponent():
+				total_steering_Force += get_spawn_steering_force()
+			elif ball.carrier == null:
+				total_steering_Force += get_ball_proximity_steering_force()
+		
 	total_steering_Force = total_steering_Force.limit_length(1.0)
 	player.velocity = total_steering_Force * player.speed
 
@@ -32,7 +37,7 @@ func perform_ai_desition() -> void:
 			var shot_direction = player.position.direction_to(player.target_goal.get_radom_vector_position())
 			var data = PlayerStateData.build().set_shot_power(player.power).set_shot_direction(shot_direction)
 			player.switch_state(Player.State.SHOOTING, data)
-		elif has_oppoent_nearby() and randf() < PASS_PROBABILITY:
+		elif randf() < PASS_PROBABILITY  and has_oppoent_nearby() and is_teamate_in_view():
 			player.switch_state(Player.State.PASSING)
 
 
@@ -51,3 +56,18 @@ func get_carrier_sterring_force() -> Vector2:
 	var direction = player.position.direction_to(target)
 	var weight = get_bicycle_weight(player.position, target, 100, 0, 150, 1)
 	return weight * direction  
+
+
+func get_ball_proximity_steering_force() -> Vector2:
+	var weight = get_bicycle_weight(player.position, ball.position, 50, 1, 120, 0)
+	var direction  = player.position.direction_to(ball.position)
+	return weight * direction
+
+func get_spawn_steering_force() -> Vector2:
+	var weight = get_bicycle_weight(player.position, player.spawn_point, 30, 1, 100, 0)
+	var direction = player.position.direction_to(player.spawn_point)
+	return weight * direction
+
+func is_teamate_in_view() -> bool:
+	var player_in_view = team_detection_area.get_overlapping_bodies()
+	return player_in_view.find_custom(func(p : Player): return p != player and p.country == player.country) > -1

@@ -9,14 +9,16 @@ var ball : Ball = null
 var player : Player = null
 var ai_scenece_time = Time.get_ticks_msec()
 var oppnent_detection_area : Area2D = null
+var team_detection_area : Area2D = null
 
 func _ready() -> void:
 	ai_scenece_time = Time.get_ticks_msec() + randi_range(0, AI_TICK_TIME)
 	
-func setup(context_ball : Ball, context_player :  Player, oppnent_detection_area_context : Area2D) -> void:
+func setup(context_ball : Ball, context_player :  Player, oppnent_detection_area_context : Area2D, context_team_detection_area : Area2D) -> void:
 	player = context_player
 	ball = context_ball
 	oppnent_detection_area = oppnent_detection_area_context
+	team_detection_area = context_team_detection_area
 
 func process_ai() -> void:
 	if Time.get_ticks_msec() - ai_scenece_time > AI_TICK_TIME:
