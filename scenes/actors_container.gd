@@ -7,8 +7,7 @@ const WEIGHT_CALCULATION_CASH = 200
 @export var ball : Ball
 @export var goal_home : Goal
 @export var goal_away : Goal
-@export var team_home : String
-@export var team_away : String
+
 
 @onready var spawns: Node2D = %spawns
 
@@ -18,14 +17,14 @@ var time_scence = Time.get_ticks_msec()
 var country : String = ""
 
 func _ready() -> void:
-	squad_home = spawn_players(team_home, goal_home)
+	squad_home = spawn_players(GameManager.countries[0], goal_home)
 	spawns.scale.x = -1
-	squad_away = spawn_players(team_away, goal_away)
+	squad_away = spawn_players(GameManager.countries[1], goal_away)
 	var player : Player = get_children().filter(func(p): return p is Player)[4]
 	player.control_scheme = Player.ControlScheme.P1
 	player.set_control_texture()
-	goal_home.initialize(team_home)
-	goal_away.initialize(team_away)
+	goal_home.initialize(GameManager.countries[0])
+	goal_away.initialize(GameManager.countries[1])
 
 func _process(_delta : float) -> void:
 		if Time.get_ticks_msec() - time_scence > WEIGHT_CALCULATION_CASH:

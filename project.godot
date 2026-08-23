@@ -24,6 +24,7 @@ config/icon="res://icon.svg"
 KeyUtils="*res://utils/key_utils.gd"
 DataLoader="*uid://ba15ee7wspt02"
 GameEvents="*uid://cghfqiqfvahll"
+GameManager="*uid://cde6piwl0bnby"
 
 [debug]
 
