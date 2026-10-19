@@ -13,7 +13,7 @@ const COUNTRIES := ["DEFAULT", "FRANCE", "ARGENTINA", "BRAZIL", "ENGLAND", "GERM
 enum ControlScheme {CPU, P1, P2}
 enum Role {GOALTE, DEFENSE, OFFENSE, MIDFIELD}
 enum SkinColor {LIGHT, MID, DARK}
-enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, HEADER, VOLLEY_KICK, BICYCLE_KICK, CHEST_CONTROL, HURT, DIVING, CELEBRATING, MOURNING}
+enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, HEADER, VOLLEY_KICK, BICYCLE_KICK, CHEST_CONTROL, HURT, DIVING, CELEBRATING, MOURNING, RESETING}
 
 @export var ball : Ball
 @export var control_scheme : ControlScheme
@@ -42,7 +42,7 @@ var state_factory := PlayerStateFactory.new()
 var role  = Player.Role.MIDFIELD
 var skincolor = Player.SkinColor.MID
 var fullname : String 
-
+var kickofposition : Vector2 = Vector2.ZERO
 var walk_thresohld = 0.6
 
 # ai behaviors 
@@ -78,8 +78,9 @@ func _process(delta: float) -> void:
 	process_gravity(delta)
 	move_and_slide()
 
-func initialize(player_pos : Vector2, c_ball : Ball, c_own_goal : Goal , c_taget_goal : Goal, player_data : PlayerResource, c_country : String) -> void:
+func initialize(player_pos : Vector2, c_ball : Ball, c_own_goal : Goal , c_taget_goal : Goal, player_data : PlayerResource, c_country : String, context_player_kickof_position : Vector2) -> void:
 	position = player_pos
+	kickofposition = context_player_kickof_position
 	ball = c_ball
 	own_goal = c_own_goal
 	target_goal = c_taget_goal
@@ -129,6 +130,10 @@ func set_heading() -> void:
 	elif velocity.x < 0:
 		heading = Vector2.LEFT
 
+func face_towrds_target_goal() -> void:
+	if not is_facing_target_goal():
+		heading = heading * -1
+
 func flip_sprites() -> void:
 	if heading == Vector2.RIGHT:
 		player_sprite.flip_h = false
@@ -164,6 +169,9 @@ func control_ball() -> void:
 	if ball.height > 10.0:
 		switch_state(State.CHEST_CONTROL)
 
+func is_ready_for_kickoff() -> bool:
+	return current_state != null and current_state.is_ready_for_kickoff()
+
 func can_carry_ball() -> bool:
 	return current_state != null and current_state.can_carry_ball()
 
@@ -177,6 +185,7 @@ func on_team_scored(team) -> void:
 		switch_state(Player.State.MOURNING)
 	else : 
 		switch_state(Player.State.CELEBRATING)
+
 
 func is_facing_target_goal() -> bool:
 	var direction_to_target = position.direction_to(target_goal.position)

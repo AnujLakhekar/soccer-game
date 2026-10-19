@@ -48,8 +48,6 @@ script = ExtResource("5_e3hyu")
 ball = NodePath("Ball")
 goal_home = NodePath("PitchObjects/GoalHome")
 goal_away = NodePath("PitchObjects/GoalAway")
-team_home = "SPAIN"
-team_away = "GERMANY"
 
 [node name="spawns" type="Node2D" parent="ActorsContainer" unique_id=508405059]
 unique_name_in_owner = true
@@ -133,4 +131,14 @@ collision_mask = 0
 polygon = PackedVector2Array(14, -1, 30, -1, 14, 116, 0, 116)
 
 [node name="Ball" parent="ActorsContainer" unique_id=1824934714 instance=ExtResource("5_71j4m")]
-position = Vector2(411, 121)
+position = Vector2(424, 181)
+
+[node name="KickOffs" type="Node2D" parent="ActorsContainer" unique_id=1029266449]
+unique_name_in_owner = true
+position = Vector2(425, 180)
+
+[node name="KickOffPosition1" type="Node2D" parent="ActorsContainer/KickOffs" unique_id=1976083566]
+position = Vector2(-10, 0)
+
+[node name="KickOffPosition2" type="Node2D" parent="ActorsContainer/KickOffs" unique_id=285910989]
+position = Vector2(-5, 30)

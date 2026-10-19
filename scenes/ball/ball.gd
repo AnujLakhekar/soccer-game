@@ -22,10 +22,13 @@ var height := 0.0
 var height_velocity := 0.0
 var state_factory := BallStateFactory.new()
 var velocity := Vector2.ZERO
+var spawn_position : Vector2 = Vector2.ZERO
 
 
 func _ready() -> void:
 	switch_state(State.FREEFORM)
+	spawn_position = position
+	GameEvents.team_reset.connect(on_game_reset)
 
 func _process(_delta: float) -> void:
 	ball_sprite.position = Vector2.UP * height
@@ -76,3 +79,8 @@ func is_heading_for_scoring_area(scoring_Area : Area2D) -> bool:
 		return false
 	
 	return scoring_raycast.get_collider() == scoring_Area
+
+func on_game_reset() -> void:
+	position = spawn_position
+	velocity = Vector2.ZERO
+	switch_state(State.FREEFORM)

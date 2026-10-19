@@ -19,21 +19,21 @@ func perform_ai_movements() -> void:
 		if total_steering_Force.length_squared() < 1:
 			if is_ball_posseded_by_opponent():
 				total_steering_Force += get_spawn_steering_force()
-			elif ball.carrier == null:
-				total_steering_Force += get_ball_proximity_steering_force()
+		elif ball.carrier == null:
+			total_steering_Force += get_ball_proximity_steering_force()
 		
 	total_steering_Force = total_steering_Force.limit_length(1.0)
 	player.velocity = total_steering_Force * player.speed
 
 func perform_ai_desition() -> void:
-	
+		
 	if is_ball_posseded_by_opponent() and player.position.distance_to(ball.position) < TAKLE_DISTANCE and randf() < TAKLE_PROBABILITY:
 		player.switch_state(Player.State.TACKLING)
 
 	if ball.carrier == player:
 		var target := player.target_goal.get_center_target_position()
 		if  player.position.distance_to(target) < SHOT_THRESHOLD and randf() < SHOT_PROBABILITY:
-			face_towrds_target_goal()
+			player.face_towrds_target_goal()
 			var shot_direction = player.position.direction_to(player.target_goal.get_radom_vector_position())
 			var data = PlayerStateData.build().set_shot_power(player.power).set_shot_direction(shot_direction)
 			player.switch_state(Player.State.SHOOTING, data)
@@ -58,13 +58,13 @@ func get_carrier_sterring_force() -> Vector2:
 	return weight * direction  
 
 func get_ball_proximity_steering_force() -> Vector2:
-	var weight = get_bicycle_weight(player.position, ball.position, 50, 1, 120, 0)
-	var direction  = player.position.direction_to(ball.position)
+	var weight := get_bicycle_weight(player.position, ball.position, 50, 1, 120, 0)
+	var direction := player.position.direction_to(ball.position)
 	return weight * direction
 
 func get_spawn_steering_force() -> Vector2:
-	var weight = get_bicycle_weight(player.position, player.spawn_point, 30, 1, 100, 0)
-	var direction = player.position.direction_to(player.spawn_point)
+	var weight := get_bicycle_weight(player.position, player.spawn_point, 30, 0, 100, 1)
+	var direction := player.position.direction_to(player.spawn_point)
 	return weight * direction
 
 func is_teamate_in_view() -> bool:

@@ -46,10 +46,6 @@ func get_bicycle_weight(position: Vector2, center_target: Vector2, inner_circle_
 		var close_range_distance = outer_circle_radius - inner_circle_radius
 		return lerpf(inner_circle_weight, outer_circle_weight, distance_to_inner_radius / close_range_distance)
 
-func face_towrds_target_goal() -> void:
-	if not player.is_facing_target_goal():
-		player.heading = player.heading * -1
-
 func is_ball_posseded_by_opponent() -> bool:
 	return ball.carrier != null and ball.carrier.country != player.country
 

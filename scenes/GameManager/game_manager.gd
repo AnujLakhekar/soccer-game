@@ -1,6 +1,6 @@
 extends Node
 
-const DURATION_GAME_SEC = 1 #2 * 60 
+const DURATION_GAME_SEC = 2 * 60 
 
 enum State {IN_PLAY, SCORED, RESET, KICKOFF, OVERTIME, GAMEOVER}
 
@@ -9,10 +9,15 @@ var state_factory : GameStateFactory = GameStateFactory.new()
 var time_left : float
 var countries : Array[String] = ["FRANCE", "USA"]
 var score : Array[int] = [0, 0]
+var scored = false
 
 func _ready() -> void:
 	time_left = DURATION_GAME_SEC
 	switch_state(State.IN_PLAY)
+	GameEvents.team_scored.connect(on_score)
+
+func on_score(country) -> void:
+	scored = true
 
 func switch_state(state : State, data : GameStateData = GameStateData.build()) -> void:
 	if current_state != null:
