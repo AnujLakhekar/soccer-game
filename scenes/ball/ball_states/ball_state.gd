@@ -3,26 +3,27 @@ extends Node
 
 const GRAVITY := 10.0
 
-signal state_transition_requested(new_state: BallState, data : BallStateData)
-
+signal state_transition_requested(new_state: BallState)
 
 var animation_player : AnimationPlayer = null
 var ball : Ball = null
 var carrier : Player = null
 var player_detection_area : Area2D = null
+var shot_particles : GPUParticles2D = null
 var sprite : Sprite2D = null
-var state_data : BallStateData = BallStateData.new()
+var state_data : BallStateData = null
 
-func setup(context_ball: Ball, context_player_detection_area: Area2D, context_carrier: Player, context_animation_player: AnimationPlayer, context_sprite: Sprite2D, context_state_data : BallStateData) -> void:
+func setup(context_ball: Ball, context_state_data: BallStateData, context_player_detection_area: Area2D, context_carrier: Player, context_animation_player: AnimationPlayer, context_sprite: Sprite2D, context_shot_particles: GPUParticles2D) -> void:
 	ball = context_ball
 	player_detection_area = context_player_detection_area
 	carrier = context_carrier
 	animation_player = context_animation_player
 	sprite = context_sprite
 	state_data = context_state_data
+	shot_particles = context_shot_particles
 
-func transition_state(state : Ball.State, data : BallStateData = BallStateData.build()) -> void:
-	state_transition_requested.emit(state, data)
+func transition_state(new_state: Ball.State, data: BallStateData = BallStateData.new()) -> void:
+	state_transition_requested.emit(new_state, data)
 
 func set_ball_animation_from_velocity() -> void:
 	if ball.velocity == Vector2.ZERO:
@@ -48,6 +49,7 @@ func move_and_bounce(delta: float) -> void:
 	var collision := ball.move_and_collide(ball.velocity * delta)
 	if collision != null:
 		ball.velocity = ball.velocity.bounce(collision.get_normal()) * ball.BOUNCINESS
+		SoundPlayer.play(SoundPlayer.Sound.BOUNCE)
 		ball.switch_state(Ball.State.FREEFORM)
 
 func can_air_interact() -> bool:

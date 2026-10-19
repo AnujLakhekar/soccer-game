@@ -22,8 +22,8 @@ func handle_human_movement() -> void:
 		elif can_teammate_pass_ball():
 			ball.carrier.get_pass_request(player)
 		else:
-			player.swap_control.emit(player)
-	
+			player.swap_requested.emit(player)
+
 	elif KeyUtils.is_action_just_pressed(player.control_scheme, KeyUtils.Action.SHOOT):
 		if player.has_ball():
 			transition_state(Player.State.PREPPING_SHOT)
@@ -38,12 +38,11 @@ func handle_human_movement() -> void:
 		elif player.velocity != Vector2.ZERO:
 			state_transition_requested.emit(Player.State.TACKLING)
 
-
 func can_carry_ball() -> bool:
-	return player.role != Player.Role.GOALTE
+	return player.role != Player.Role.GOALIE
 
-func can_pass() -> bool:
-	return true
-	
 func can_teammate_pass_ball() -> bool:
 	return ball.carrier != null and ball.carrier.country == player.country and ball.carrier.control_scheme == Player.ControlScheme.CPU
+	
+func can_pass() -> bool:
+	return true

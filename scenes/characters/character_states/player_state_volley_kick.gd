@@ -1,20 +1,20 @@
 class_name PlayerStateVolleyKick
 extends PlayerState
 
-
-const BONUS = 1.5
+const BALL_HEIGHT_MIN := 1.0
+const BALL_HEIGHT_MAX := 25.0
+const BONUS_POWER := 1.5
 
 func _enter_tree() -> void:
 	animation_player.play("volley_kick")
-	ball_detection_area.body_entered.connect(_on_ball_entered)
-
-
-func _on_ball_entered(ball : Ball) -> void:
-	if ball.can_air_connect(1.0, 20.0):
-		var destination = target_goal.get_radom_vector_position()
-		var direction = ball.position.direction_to(destination)
-		ball.shoot(direction * player.power * BONUS)
-
+	ball_detection_area.body_entered.connect(on_ball_entered.bind())
+	
+func on_ball_entered(contact_ball: Ball) -> void:
+	if contact_ball.can_air_connect(BALL_HEIGHT_MIN, BALL_HEIGHT_MAX):
+		var destination := target_goal.get_random_target_position()
+		var direction := ball.position.direction_to(destination)
+		SoundPlayer.play(SoundPlayer.Sound.POWERSHOT)
+		contact_ball.shoot(direction * player.power * BONUS_POWER)
 
 func on_animation_complete() -> void:
 	transition_state(Player.State.RECOVERING)
